@@ -1,8 +1,9 @@
+
 "use client"
 
 import * as React from "react"
-import { Pie, PieChart, ResponsiveContainer, Cell, Tooltip, Legend } from "recharts"
-import { ChartTooltipContent, ChartStyle, type ChartConfig } from "@/components/ui/chart"
+import { Pie, PieChart, Cell, Tooltip, Legend } from "recharts"
+import { ChartContainer, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import type { StatusDistributionData, CallStatus } from "@/lib/types";
 
 interface CallStatusDistributionChartProps {
@@ -27,8 +28,8 @@ const chartConfig = Object.fromEntries(
 
 export default function CallStatusDistributionChart({ data }: CallStatusDistributionChartProps) {
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <PieChart margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
+    <ChartContainer config={chartConfig} className="w-full h-[350px]">
+      <PieChart margin={{ top: 5, right: 20, bottom: 5, left: 20 }} accessibilityLayer>
         <Tooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
@@ -54,8 +55,7 @@ export default function CallStatusDistributionChart({ data }: CallStatusDistribu
           iconSize={12}
           formatter={(value, entry) => <span style={{ color: 'hsl(var(--foreground))' }}>{value}</span>}
         />
-        <ChartStyle config={chartConfig} id="call-status-chart" />
       </PieChart>
-    </ResponsiveContainer>
+    </ChartContainer>
   )
 }

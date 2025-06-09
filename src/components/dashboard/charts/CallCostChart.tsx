@@ -1,7 +1,8 @@
+
 "use client"
 
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts"
-import { ChartTooltipContent, ChartStyle, type ChartConfig } from "@/components/ui/chart"
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts"
+import { ChartContainer, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import type { CallTrendData } from "@/lib/types";
 
 interface CallCostChartProps {
@@ -17,8 +18,8 @@ const chartConfig = {
 
 export default function CallCostChart({ data }: CallCostChartProps) {
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <LineChart data={data} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+    <ChartContainer config={chartConfig} className="w-full h-[350px]">
+      <LineChart data={data} margin={{ top: 5, right: 20, left: -20, bottom: 5 }} accessibilityLayer>
         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
         <XAxis
           dataKey="date"
@@ -41,8 +42,7 @@ export default function CallCostChart({ data }: CallCostChartProps) {
         />
         <Legend />
         <Line type="monotone" dataKey="averageCost" stroke="var(--color-averageCost)" strokeWidth={2} dot={{ r: 4 }} name="Average Cost" />
-        <ChartStyle config={chartConfig} id="call-cost-chart" />
       </LineChart>
-    </ResponsiveContainer>
+    </ChartContainer>
   )
 }

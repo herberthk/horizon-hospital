@@ -1,7 +1,8 @@
+
 "use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts"
-import { ChartTooltipContent, ChartStyle, type ChartConfig } from "@/components/ui/chart" // Assuming ChartStyle for theming
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts"
+import { ChartContainer, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart" 
 import type { CallTrendData } from "@/lib/types";
 
 interface CallVolumeChartProps {
@@ -18,8 +19,8 @@ const chartConfig = {
 
 export default function CallVolumeChart({ data }: CallVolumeChartProps) {
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+    <ChartContainer config={chartConfig} className="w-full h-[350px]">
+      <BarChart data={data} margin={{ top: 5, right: 20, left: -20, bottom: 5 }} accessibilityLayer>
         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
         <XAxis 
           dataKey="date" 
@@ -41,8 +42,7 @@ export default function CallVolumeChart({ data }: CallVolumeChartProps) {
         />
         <Legend />
         <Bar dataKey="count" fill="var(--color-calls)" radius={4} name="Call Volume" />
-        <ChartStyle config={chartConfig} id="call-volume-chart" />
       </BarChart>
-    </ResponsiveContainer>
+    </ChartContainer>
   )
 }
