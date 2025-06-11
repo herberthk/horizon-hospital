@@ -34,14 +34,14 @@ export default function LoginPage() {
        {/* For example, a large, faded hospital-related SVG or image */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         {/* Example: A decorative background pattern or image */}
-        {/* <Image
+        <Image
           src="https://placehold.co/1920x1080/F0F8FF/E0EFFF.png?text=."
           alt="Background Pattern"
           layout="fill"
           objectFit="cover"
           className="opacity-50"
           data-ai-hint="abstract pattern"
-        /> */}
+        />
       </div>
     </div>
   );
