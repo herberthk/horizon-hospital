@@ -1,6 +1,6 @@
-# Horizon Hospital Voice Agent customer Support
+# Horizon Hospital Voice AI Agent customer Support
 
-A modern web application for Horizon Hospital featuring a voice agent customer support system with visualization dashboard.
+A modern web application for Horizon Hospital featuring a voice AI agent customer support system with visualization dashboard.
 
 # Screenshots
  ### Login Page
