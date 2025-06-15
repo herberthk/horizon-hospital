@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { signOut } from "@/lib/actions/auth.action";
 import { LogOut, UserCircle, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -24,9 +25,7 @@ export default function UserNav() {
   }, []);
 
   const handleLogout = () => {
-    if (isMounted && typeof window !== 'undefined') {
-      localStorage.removeItem("isLoggedInHorizonView");
-    }
+    signOut() 
     router.push("/");
   };
 

@@ -4,11 +4,17 @@ import CallCostChart from "@/components/dashboard/charts/CallCostChart";
 import CallStatusDistributionChart from "@/components/dashboard/charts/CallStatusDistributionChart";
 import { mockCallTrendData, mockStatusDistribution } from "@/lib/data";
 import { BarChartBig, TrendingUp, PieChart as PieChartIcon } from "lucide-react";
+import { fetchCallStatusDistribution, fetchCallTrendData } from "@/lib/actions/process.action";
 
-export default async function AnalyticsPage() {
+const AnalyticsPage = async ()=> {
   // In a real app, fetch this data
-  const callTrendData = mockCallTrendData;
-  const statusDistributionData = mockStatusDistribution;
+  // const callTrendData = mockCallTrendData;
+  // const statusDistributionData = mockStatusDistribution;
+
+  const callTrendData = await fetchCallTrendData();
+
+  const statusDistributionData = await fetchCallStatusDistribution();
+  // console.log('distribution data', status);
 
   return (
     <div className="space-y-8">
@@ -50,3 +56,5 @@ export default async function AnalyticsPage() {
     </div>
   );
 }
+
+export default AnalyticsPage;

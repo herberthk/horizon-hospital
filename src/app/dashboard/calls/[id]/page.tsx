@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCallInformation } from "@/lib/actions/process.action";
 
-export default async function CallDetailPage({ params }: { params: { id: string } }) {
-  const call = getCallById(params.id); // In a real app, this would be an async fetch
+const CallDetailPage = async ({ params }: { params: { id: string } }) => {
+  const { id } = await params
+  const call = await getCallInformation(id); // In a real app, this would be an async fetch
 
   if (!call) {
     return (
@@ -33,7 +35,7 @@ export default async function CallDetailPage({ params }: { params: { id: string 
   return (
     <div>
       <Button asChild variant="outline" className="mb-6">
-        <Link href="/dashboard">
+        <Link href="/dashboard" className="hover:bg-white hover:text-black">
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Call Log
         </Link>
       </Button>
@@ -41,3 +43,5 @@ export default async function CallDetailPage({ params }: { params: { id: string 
     </div>
   );
 }
+
+export default CallDetailPage;

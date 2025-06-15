@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-
+import { auth } from "@/firebase/client";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,8 +20,15 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, User, Mail, Lock, LogIn } from "lucide-react";
 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { signIn, signUp } from "@/lib/actions/auth.action";
+import { getFriendlyErrorMessage } from "@/lib/errors";
+
 const formSchema = z.object({
-  fullName: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Full name must be at least 2 characters.",
   }),
   email: z.string().email({
@@ -38,7 +45,7 @@ const formSchema = z.object({
   path: ["confirmPassword"], // Path to show the error on
 });
 
-export function SignupForm() {
+const SignupForm =()=> {
   const router = useRouter();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
@@ -52,28 +59,90 @@ export function SignupForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async(values: z.infer<typeof formSchema>)=> {
     // Simulate API call for signup
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Mock successful signup
-    if (isMounted && typeof window !== 'undefined') {
-      // Potentially save some mock user data or a "signedUp" flag
-      // For now, just set loggedIn to true to allow dashboard access
-      localStorage.setItem("isLoggedInHorizonView", "true"); 
+    // if (isMounted && typeof window !== 'undefined') {
+    //   // Potentially save some mock user data or a "signedUp" flag
+    //   // For now, just set loggedIn to true to allow dashboard access
+    //   localStorage.setItem("isLoggedInHorizonView", "true"); 
+    // }
+    const { name, email, password } = values;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+      const idToken = await userCredential.user.getIdToken();
+        
+      if (!idToken) {
+              toast({
+                    variant: "destructive",
+                    title: "Signup Failed",
+                    description: "Failed to create account. Please try again.",
+                  });
+              return;
+            }
+
+        const result = await signUp({
+          uid: userCredential.user.uid,
+          name: name!,
+          email,
+          password,
+        });
+
+        console.log("result", result);
+
+        if (!result.success) {
+             toast({
+                    variant: "destructive",
+                    title: "Signup Failed",
+                    description: "Failed to create account. Please try again.",
+                  });
+              return;
+        }
+        
+        await signIn({
+          email,
+          idToken,
+        });
+
+         toast({
+                title: "Signup successful",
+                description: result.message,
+              });
+          router.push("/dashboard");
+
+       
+        
+    } catch (error) {
+        console.log('Error signing up:', error);
+        //@ts-ignore
+        const friendlyMessage = getFriendlyErrorMessage(error.code);
+        console.log("friendlyMessage", friendlyMessage);
+        toast({
+          variant: "destructive",
+          title: "Signup Failed",
+          description: friendlyMessage,
+        });
+
+        if (friendlyMessage === "This email is already registered") {
+          router.push("/login"); // Redirect to login page if email is already in use
+        }
     }
-    toast({
-      title: "Signup Successful",
-      description: "Your account has been created. Welcome to Horizon View!",
-    });
-    router.push("/dashboard"); // Redirect to dashboard after signup
+    
   }
 
   if (!isMounted) {
@@ -85,7 +154,7 @@ export function SignupForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="fullName"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Full Name</FormLabel>
@@ -204,3 +273,5 @@ export function SignupForm() {
     </Form>
   );
 }
+
+export default SignupForm;

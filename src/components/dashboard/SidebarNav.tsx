@@ -24,8 +24,8 @@ export default function SidebarNav() {
               className={cn(
                 "font-medium",
                 pathname === item.href
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                  : "hover:bg-sidebar-accent/80 hover:text-sidebar-accent-foreground"
+                  ? "!bg-primary !hover:bg-primary/80 hover:text-white"
+                  : "hover:bg-primary hover:text-white"
               )}
               isActive={pathname === item.href}
               tooltip={item.label}

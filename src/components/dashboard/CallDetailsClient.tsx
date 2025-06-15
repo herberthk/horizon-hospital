@@ -4,13 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, FileText, Headphones, Info, Clock, DollarSign, User, Tag, ShieldAlert, AlertCircle } from "lucide-react";
-import type { Call, FlagRiskyCallsOutput } from "@/lib/types";
 import { flagRiskyCalls } from "@/ai/flows/flag-risky-calls";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatDuration } from "@/lib/data";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { updateCallStatus } from "@/lib/actions/process.action";
 
 interface CallDetailsClientProps {
   call: Call;
@@ -58,6 +58,10 @@ export default function CallDetailsClient({ call }: CallDetailsClientProps) {
     try {
       const assessment = await flagRiskyCalls({ transcript: call.transcript });
       setRiskAssessment(assessment);
+      if (assessment.isRisky) {
+        await updateCallStatus(call.id, "Flagged by AI");
+      }
+      // console.log("assessment", assessment);
     } catch (error) {
       console.error("Error analyzing call:", error);
       // Handle error display to user, e.g., via toast
@@ -104,7 +108,7 @@ export default function CallDetailsClient({ call }: CallDetailsClientProps) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-3xl font-headline font-semibold tracking-tight text-foreground">
-            Call Details: {call.id}
+            Call Details
           </h2>
           <p className="text-muted-foreground">
             Comprehensive information for call ID {call.id}.
@@ -127,25 +131,29 @@ export default function CallDetailsClient({ call }: CallDetailsClientProps) {
               <Tag className="mr-3 h-5 w-5 text-muted-foreground" />
               <strong>Type:</strong> <span className="ml-2">{call.type}</span>
             </div>
-             <div className="flex items-center">
+             {/* <div className="flex items-center">
               <User className="mr-3 h-5 w-5 text-muted-foreground" />
               <strong>Patient:</strong> <span className="ml-2">{call.patientName || "N/A"}</span>
-            </div>
-            <div className="flex items-center">
+            </div> */}
+            {/* <div className="flex items-center">
               <User className="mr-3 h-5 w-5 text-muted-foreground" />
               <strong>Agent ID:</strong> <span className="ml-2">{call.agentId}</span>
-            </div>
+            </div> */}
             <div className="flex items-center">
               <Clock className="mr-3 h-5 w-5 text-muted-foreground" />
               <strong>Timestamp:</strong> <span className="ml-2">{new Date(call.timestamp).toLocaleString()}</span>
             </div>
             <div className="flex items-center">
               <Clock className="mr-3 h-5 w-5 text-muted-foreground" />
-              <strong>Duration:</strong> <span className="ml-2">{formatDuration(call.duration)}</span>
+              <strong>Duration:</strong> <span className="ml-2">{call.duration}</span>
             </div>
             <div className="flex items-center">
               <DollarSign className="mr-3 h-5 w-5 text-muted-foreground" />
               <strong>Cost:</strong> <span className="ml-2">{formatCurrency(call.cost)}</span>
+            </div>
+            <div className="flex items-center">
+              <User className="mr-3 h-5 w-5 text-muted-foreground" />
+              <strong>End Reason:</strong> <span className="ml-2">{call.endedReason}</span>
             </div>
           </CardContent>
         </Card>
@@ -233,8 +241,8 @@ export default function CallDetailsClient({ call }: CallDetailsClientProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {call.audioUrl ? (
-            <audio controls src={call.audioUrl} className="w-full">
+          {call.recordingUrl ? (
+            <audio controls src={call.recordingUrl} className="w-full">
               Your browser does not support the audio element.
             </audio>
           ) : (

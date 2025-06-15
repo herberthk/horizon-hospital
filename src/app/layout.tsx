@@ -1,17 +1,21 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import FabCallButton from '@/components/shared/fab-call-button';
+import { seedCalls, seedCallTrendData } from '@/lib/seed';
 
 export const metadata: Metadata = {
-  title: 'Horizon View',
-  description: 'Voice Agent Visualization Dashboard for Horizon Hospital',
+  title: 'Horizon Hospital',
+  description: 'Voice Agent support with Visualization Dashboard for Horizon Hospital',
 };
 
-export default function RootLayout({
+const RootLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) =>{
+  // await seedCallTrendData();
+  // await seedCalls();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -23,7 +27,10 @@ export default function RootLayout({
       <body className="font-body antialiased" suppressHydrationWarning={true}>
         {children}
         <Toaster />
+        <FabCallButton />
       </body>
     </html>
   );
 }
+
+export default RootLayout;

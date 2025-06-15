@@ -20,6 +20,10 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase/client";
+import { signIn } from "@/lib/actions/auth.action";
+import { getFriendlyErrorMessage } from "@/lib/errors";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -63,28 +67,46 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+   
+    try {
+       const { email, password } = values;
 
-    // Mock authentication
-    if (values.email === "admin@horizon.com" && values.password === "password") {
-      if (isMounted && typeof window !== 'undefined') {
-        localStorage.setItem("isLoggedInHorizonView", "true");
-      }
-      toast({
-        title: "Login Successful",
-        description: "Welcome back to Horizon View!",
-      });
-      router.push("/dashboard");
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Login Failed",
-        description: "Invalid email or password. Please try again.",
-      });
-      if (isMounted && typeof window !== 'undefined') {
-        localStorage.removeItem("isLoggedInHorizonView");
-      }
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const idToken = await userCredential.user.getIdToken();
+        if (!idToken) {
+           toast({
+                variant: "destructive",
+                title: "Login Failed",
+                description: "Failed to log into account. Please try again.",
+              });
+          return;
+        }
+
+        await signIn({
+          email,
+          idToken,
+        });
+
+         toast({
+                title: "Login successful",
+                description: "Welcome back to Horizon hospital!",
+              });
+        router.push("/dashboard");
+    } catch (error) {
+      console.log('Error signing in:', error);
+              //@ts-ignore
+      const friendlyMessage = getFriendlyErrorMessage(error.code);
+      console.log("friendlyMessage", friendlyMessage);
+              toast({
+                variant: "destructive",
+                title: "Login Failed",
+                description: friendlyMessage,
+              });
     }
   }
 
@@ -177,7 +199,7 @@ export function LoginForm() {
         </form>
       </Form>
 
-      <div className="relative my-6">
+      {/* <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
@@ -186,9 +208,9 @@ export function LoginForm() {
             Or continue with
           </span>
         </div>
-      </div>
+      </div> */}
 
-      <Button
+      {/* <Button
         variant="outline"
         className="w-full"
         onClick={handleGoogleLogin}
@@ -201,7 +223,7 @@ export function LoginForm() {
             <GoogleIcon /> Sign in with Google
           </>
         )}
-      </Button>
+      </Button> */}
     </>
   );
 }

@@ -20,8 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowUpDown, Eye, FilterX, Search } from "lucide-react";
-import type { Call, CallType, CallStatus } from "@/lib/types";
-import { callTypes, callStatuses, formatCurrency, formatDuration } from "@/lib/data";
+import { callStatuses, formatCurrency, formatDuration } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 
 interface CallLogTableClientProps {
@@ -29,6 +28,8 @@ interface CallLogTableClientProps {
 }
 
 type SortKey = keyof Pick<Call, "id" | "type" | "status" | "cost" | "timestamp">;
+
+export const callTypes: CallType[] = ["webCall" , "phoneCall" , "Enquiry" , "Follow-up"];
 
 export default function CallLogTableClient({ initialCalls }: CallLogTableClientProps) {
   const [calls, setCalls] = useState<Call[]>(initialCalls);
@@ -172,9 +173,9 @@ export default function CallLogTableClient({ initialCalls }: CallLogTableClientP
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead onClick={() => requestSort("id")} className="cursor-pointer hover:bg-muted/50">
+                {/* <TableHead onClick={() => requestSort("id")} className="cursor-pointer hover:bg-muted/50">
                   Call ID {getSortIndicator("id")}
-                </TableHead>
+                </TableHead> */}
                 <TableHead onClick={() => requestSort("timestamp")} className="cursor-pointer hover:bg-muted/50">
                   Timestamp {getSortIndicator("timestamp")}
                 </TableHead>
@@ -195,7 +196,7 @@ export default function CallLogTableClient({ initialCalls }: CallLogTableClientP
             <TableBody>
               {filteredAndSortedCalls.map((call) => (
                 <TableRow key={call.id} className="hover:bg-muted/50 transition-colors">
-                  <TableCell className="font-medium">{call.id}</TableCell>
+                  {/* <TableCell className="font-medium">{call.id}</TableCell> */}
                   <TableCell>{new Date(call.timestamp).toLocaleString()}</TableCell>
                   <TableCell>{call.type}</TableCell>
                   <TableCell>{call.patientName || "N/A"}</TableCell>
@@ -203,9 +204,9 @@ export default function CallLogTableClient({ initialCalls }: CallLogTableClientP
                     <Badge variant={getStatusBadgeVariant(call.status)}>{call.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">{formatCurrency(call.cost)}</TableCell>
-                  <TableCell className="text-right">{formatDuration(call.duration)}</TableCell>
+                  <TableCell className="text-right">{call.duration}</TableCell>
                   <TableCell className="text-center">
-                    <Button asChild variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+                    <Button asChild variant="ghost" size="sm" className="text-primary hover:bg-primary hover:text-white">
                       <Link href={`/dashboard/calls/${call.id}`}>
                         <Eye className="mr-1 h-4 w-4" /> View
                       </Link>
@@ -223,11 +224,7 @@ export default function CallLogTableClient({ initialCalls }: CallLogTableClientP
           <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
         </div>
       )}
-      {/* Basic Pagination (can be expanded) */}
-      {/* <div className="flex items-center justify-end space-x-2 py-4">
-        <Button variant="outline" size="sm" disabled>Previous</Button>
-        <Button variant="outline" size="sm" disabled>Next</Button>
-      </div> */}
+      
     </div>
   );
 }
