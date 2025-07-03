@@ -43,7 +43,7 @@ export default function DashboardLayoutClient({
             >
               <HospitalIcon className="h-8 w-8 text-sidebar-primary" />
               <h2 className="font-headline text-xl font-semibold">
-                Horizon Hospial
+                Horizon Hospital
               </h2>
             </Link>
           </div>
