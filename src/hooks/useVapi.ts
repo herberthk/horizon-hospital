@@ -18,6 +18,13 @@ interface SavedMessage {
   content: string;
 }
 
+/**
+ * React hook for managing the state and lifecycle of a voice call using the Vapi API.
+ *
+ * Handles call initiation, termination, speech activity, audio level monitoring, message transcript collection, and error states. Provides control functions and state variables for integrating voice call features into components.
+ *
+ * @returns An object containing call state variables (`isSpeechActive`, `callStatus`, `audioLevel`, `messages`, `assistantIsSpeaking`, `callId`) and control functions (`start`, `stop`, `toggleCall`).
+ */
 export function useVapi() {
   const [isSpeechActive, setIsSpeechActive] = useState(false);
   const [callStatus, setCallStatus] = useState<CALL_STATUS>(

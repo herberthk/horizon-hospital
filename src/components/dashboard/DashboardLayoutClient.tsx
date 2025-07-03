@@ -19,6 +19,14 @@ import SidebarNav from "@/components/dashboard/SidebarNav";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFullYear } from "@/hooks";
 
+/**
+ * Renders the client-side dashboard layout with sidebar navigation, header, main content area, and footer.
+ *
+ * Displays skeleton loaders until the component is mounted on the client, then shows the provided page content and navigation elements. The layout includes a sidebar with navigation, a header with a dashboard title and user navigation, and a footer displaying the current year.
+ *
+ * @param pageSpecificContent - The main content to display within the dashboard layout
+ * @returns The composed dashboard layout as a React element
+ */
 export default function DashboardLayoutClient({
   pageSpecificContent,
 }: {
