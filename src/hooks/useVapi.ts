@@ -26,15 +26,15 @@ export function useVapi() {
   const [assistantIsSpeaking, setAssistantIsSpeaking] = useState(false);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
   const [audioLevel, setAudioLevel] = useState(0);
-  const [callId, setCallId] = useState('');
+  const [callId, setCallId] = useState("");
 
   const sendInfo = async (id: string) => {
     console.log("Call ID:", id);
     try {
       const assessment = await processCall(id);
-      console.log('assessment', assessment);
+      console.log("assessment", assessment);
     } catch (error) {
-      console.error('Error processing call:', error);
+      console.error("Error processing call:", error);
     }
   };
 
@@ -62,7 +62,10 @@ export function useVapi() {
     };
 
     const onMessage = (message: Message) => {
-      if (message.type === 'transcript' && message.transcriptType === "partial") {
+      if (
+        message.type === "transcript" &&
+        message.transcriptType === "partial"
+      ) {
         const newMessage = { role: message.role, content: message.transcript };
         setMessages((prev) => [...prev, newMessage]);
       }
@@ -70,7 +73,7 @@ export function useVapi() {
 
     const onError = (e: Error) => {
       setCallStatus(CALL_STATUS.ERROR);
-      console.error('Error:', e);
+      console.error("Error:", e);
     };
 
     vapi.on("speech-start", onSpeechStart);
@@ -90,17 +93,16 @@ export function useVapi() {
       vapi.off("message", onMessage);
       vapi.off("error", onError);
     };
-
   }, [callId]);
 
   const start = async () => {
     setCallStatus(CALL_STATUS.LOADING);
     // const res = await vapi.start('2d2fa13b-60d3-4945-916f-3fc8f62f6981');
-   const res =  await vapi.start(undefined,undefined,{
-      name:'Horizon call center',
+    const res = await vapi.start(undefined, undefined, {
+      name: "Horizon call center",
       //@ts-ignore
-      members: squadMembers
-     });
+      members: squadMembers,
+    });
     console.log("call", res?.id);
     if (res?.id) {
       setCallId(res.id);
@@ -130,6 +132,6 @@ export function useVapi() {
     stop,
     toggleCall,
     assistantIsSpeaking,
-    callId
+    callId,
   };
 }
