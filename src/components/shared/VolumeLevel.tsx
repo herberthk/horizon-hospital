@@ -1,6 +1,5 @@
 import React from "react";
-import { Phone, PhoneCall } from "lucide-react";
-import { Button } from "../ui/button";
+import { PhoneCall } from "lucide-react";
 const numBars = 10;
 type VolumeLevelProps = {
   volume?: number; // Volume level between 0 and 1
