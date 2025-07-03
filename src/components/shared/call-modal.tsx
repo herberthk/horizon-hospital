@@ -31,21 +31,22 @@ const CallModal: React.FC<CallModalProps> = ({ isOpen, onClose }) => {
     callId,
   } = useVapi();
   const [lastMessage, setLastMessage] = useState<string>("");
-  const audioRef = useRef(new Audio("/assets/phone-ring.mp3"));
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    return () => {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    };
+    // Create Audio object only on the client side
+    audioRef.current = new Audio("/assets/phone-ring.mp3");
+    audioRef.current.loop = true;
   }, []);
 
   useEffect(() => {
-    if (callStatus === "LOADING") {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
-    } else {
-      audioRef.current.pause();
+    if (audioRef.current) {
+      if (callStatus === "LOADING") {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
     }
   }, [callStatus]);
 
