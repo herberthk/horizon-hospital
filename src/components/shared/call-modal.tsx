@@ -34,6 +34,13 @@ const CallModal: React.FC<CallModalProps> = ({ isOpen, onClose }) => {
   const audioRef = useRef(new Audio("/assets/phone-ring.mp3"));
 
   useEffect(() => {
+    return () => {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    };
+  }, []);
+
+  useEffect(() => {
     if (callStatus === "LOADING") {
       audioRef.current.currentTime = 0;
       audioRef.current.play();
