@@ -93,7 +93,7 @@ body {
     --sidebar-accent-foreground: 0 0% 100%; /* White */
     --sidebar-border: 210 20% 20%; /* Consistent border */
     --sidebar-ring: 210 70% 60%; /* Lighter primary blue for focus */
-    
+
     --chart-1: 210 70% 60%;
     --chart-2: 180 60% 50%;
     --chart-3: 30 80% 65%;
@@ -111,15 +111,27 @@ body {
   }
 }
 
-
 @keyframes fade-in-up {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes wave-ping {
-  0%, 100% { transform: scaleY(1); opacity: 1; }
-  50% { transform: scaleY(2); opacity: 0.7; }
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleY(2);
+    opacity: 0.7;
+  }
 }
 
 .animate-fade-in-up {
@@ -158,7 +170,7 @@ body {
 }
 
 .volume-bar.active {
-  background-color: #16a085;
+  background-color: #2563eb;
 }
 
 .volume-value {
